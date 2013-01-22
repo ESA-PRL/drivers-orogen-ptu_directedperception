@@ -21,6 +21,11 @@ task_context "DirectedPerceptionTask" do
         argument("pt_in","/base/Vector2d").
         doc("compute RigidBodyState from pan and tilt. PT=vector2d(pan,tilt)")
 
+    operation("rbsFromPanTilt").
+        argument("pan","double").
+        argument("tilt","double").
+        returns("/base/samples/RigidBodyState")
+
    input_port "set_orientation", "base/samples/RigidBodyState"
 
    output_port "orientation_samples","base/samples/RigidBodyState"

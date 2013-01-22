@@ -24,6 +24,8 @@ namespace ptu_directedperception {
         /* Handler for the rbsFromPT operation
          */
         virtual ::base::samples::RigidBodyState rbsFromPT(::base::Vector2d const & pt_in);
+        
+        virtual ::base::samples::RigidBodyState rbsFromPanTilt(double pan, double tilt);
 
 
     public:

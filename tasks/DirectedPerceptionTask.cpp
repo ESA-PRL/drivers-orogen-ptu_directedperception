@@ -40,6 +40,13 @@ DirectedPerceptionTask::~DirectedPerceptionTask()
     return rbs;
 }
 
+::base::samples::RigidBodyState DirectedPerceptionTask::rbsFromPanTilt(double pan, double tilt)
+{
+    base::Vector2d pt_vector;
+    pt_vector << pan,tilt;
+    return rbsFromPT(pt_vector);
+}
+
 bool DirectedPerceptionTask::configureHook()
 {
     if (! DirectedPerceptionTaskBase::configureHook())
@@ -68,10 +75,17 @@ void DirectedPerceptionTask::updateHook()
         base::Vector2d pt = ptFromRBS(lrbs);
 
         bool result = mpImpl->mDriver.setPosRad(ptu::PAN, false, pt[0]);
-        result &= mpImpl->mDriver.setPosRad(ptu::TILT, false, pt[1]);
 
-        RTT::log(RTT::Warning) << "Setting one of pan or tilt angle or both failed."
+        if ( !result )
+            RTT::log(RTT::Error) << "Setting pan failed."
             << RTT::endlog();
+
+        result = mpImpl->mDriver.setPosRad(ptu::TILT, false, pt[1]);
+        
+        if ( !result )
+            RTT::log(RTT::Error) << "Setting tilt failed."
+            << RTT::endlog();
+
     }
 
     base::Vector2d pt;
