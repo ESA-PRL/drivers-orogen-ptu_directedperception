@@ -106,6 +106,7 @@ void DirectedPerceptionTask::updateHook()
 void DirectedPerceptionTask::stopHook()
 {
     DirectedPerceptionTaskBase::stopHook();
+    mpImpl->mDriver.setHalt();
     mpImpl->mDriver.close();
 }
 //void DirectedPerceptionTask::cleanupHook()
