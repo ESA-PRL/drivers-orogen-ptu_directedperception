@@ -74,17 +74,19 @@ void DirectedPerceptionTask::updateHook()
 
         base::Vector2d pt = ptFromRBS(lrbs);
 
-        bool result = mpImpl->mDriver.setPosRad(ptu::PAN, false, pt[0]);
+        if ( _pan_speed.get() > 0 ) {
+            if (!mpImpl->mDriver.setSpeedRad(ptu::PAN, _pan_speed) )
+                RTT::log(RTT::Error) << "Setting pan speed failed." << RTT::endlog();
+        }
+        if ( !mpImpl->mDriver.setPosRad(ptu::PAN, false, pt[0]) )
+            RTT::log(RTT::Error) << "Setting pan failed." << RTT::endlog();
 
-        if ( !result )
-            RTT::log(RTT::Error) << "Setting pan failed."
-            << RTT::endlog();
-
-        result = mpImpl->mDriver.setPosRad(ptu::TILT, false, pt[1]);
-        
-        if ( !result )
-            RTT::log(RTT::Error) << "Setting tilt failed."
-            << RTT::endlog();
+        if ( _tilt_speed.get() > 0 ) {
+            if (!mpImpl->mDriver.setSpeedRad(ptu::TILT, _tilt_speed) )
+                RTT::log(RTT::Error) << "Setting titl speed failed." << RTT::endlog();
+        }
+        if ( !mpImpl->mDriver.setPosRad(ptu::TILT, false, pt[1]) )
+            RTT::log(RTT::Error) << "Setting tilt failed." << RTT::endlog();
 
     }
 
