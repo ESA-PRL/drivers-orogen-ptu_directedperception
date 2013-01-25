@@ -11,6 +11,12 @@ task_context "DirectedPerceptionTask" do
         doc("port the ptu is connected to")
     property("baudrate", "int", 9600)
 
+    property("pan_speed", "/double", 0).
+        doc("desired speed of pan axis in rad/s (<=0: not set)")
+    property("tilt_speed", "/double", 0).
+        doc("desired speed of tilt axis in rad/s (<=0: not set)")
+    
+
     operation("ptFromRBS").
         returns("/base/Vector2d").
         argument("rbs_in","/base/samples/RigidBodyState").
