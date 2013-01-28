@@ -9,13 +9,27 @@ task_context "DirectedPerceptionTask" do
     
     property("port", "/std/string", "/dev/ttyS0").
         doc("port the ptu is connected to")
+
     property("baudrate", "int", 9600)
 
     property("pan_speed", "/double", 0).
         doc("desired speed of pan axis in rad/s (<=0: not set)")
+
     property("tilt_speed", "/double", 0).
         doc("desired speed of tilt axis in rad/s (<=0: not set)")
-    
+
+
+    # Transformer:
+    # Base frame and head frame share the same position, which is the intersection point
+    # between vertical axis and horizontal axis. The port orientation_samples put out
+    # the rotation between the frames.
+
+    property("base_frame_name", "/std/string","ptu_base").
+        doc("name for the basis frame of the ptu, fixed to the platform")
+
+    property("head_frame_name", "/std/string", "ptu_head").
+        doc("name for the head frame of the ptu, the movable part")
+   
 
     operation("ptFromRBS").
         returns("/base/Vector2d").
@@ -34,7 +48,8 @@ task_context "DirectedPerceptionTask" do
 
    input_port "set_orientation", "base/samples/RigidBodyState"
 
-   output_port "orientation_samples","base/samples/RigidBodyState"
+   output_port("orientation_samples","base/samples/RigidBodyState").
+        doc("the transformation from base to head")
 
    periodic(0.01)
 end
