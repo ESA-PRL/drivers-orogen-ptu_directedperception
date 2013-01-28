@@ -3,7 +3,7 @@ name "ptu_directedperception"
 using_library "ptu_directedperception"
 import_types_from "base"
 
-task_context "DirectedPerceptionTask" do
+task_context "Task" do
    
    needs_configuration
     

@@ -2,7 +2,7 @@
 
 #include <ptu_directedperception/Driver.h>
 
-#include "DirectedPerceptionTask.hpp"
+#include "Task.hpp"
 
 using namespace ptu_directedperception;
 
@@ -13,26 +13,26 @@ class DriverImpl {
 };
 }
 
-DirectedPerceptionTask::DirectedPerceptionTask(std::string const& name)
-    : DirectedPerceptionTaskBase(name), mpImpl(new DriverImpl) 
+Task::Task(std::string const& name)
+    : TaskBase(name), mpImpl(new DriverImpl) 
 {
 }
 
-DirectedPerceptionTask::DirectedPerceptionTask(std::string const& name, RTT::ExecutionEngine* engine)
-    : DirectedPerceptionTaskBase(name, engine), mpImpl(new DriverImpl)
+Task::Task(std::string const& name, RTT::ExecutionEngine* engine)
+    : TaskBase(name, engine), mpImpl(new DriverImpl)
 {
 }
 
-DirectedPerceptionTask::~DirectedPerceptionTask()
+Task::~Task()
 {
 }
 
-::base::Vector2d DirectedPerceptionTask::ptFromRBS(::base::samples::RigidBodyState const & rbs_in)
+::base::Vector2d Task::ptFromRBS(::base::samples::RigidBodyState const & rbs_in)
 {
     return rbs_in.orientation.matrix().eulerAngles(0,1,2).segment<2>(1).reverse();
 }
 
-::base::samples::RigidBodyState DirectedPerceptionTask::rbsFromPT(::base::Vector2d const & pt_in)
+::base::samples::RigidBodyState Task::rbsFromPT(::base::Vector2d const & pt_in)
 {
     base::samples::RigidBodyState rbs;
     rbs.orientation = Eigen::AngleAxisd(pt_in[1],base::Vector3d::UnitY()) *
@@ -40,22 +40,22 @@ DirectedPerceptionTask::~DirectedPerceptionTask()
     return rbs;
 }
 
-::base::samples::RigidBodyState DirectedPerceptionTask::rbsFromPanTilt(double pan, double tilt)
+::base::samples::RigidBodyState Task::rbsFromPanTilt(double pan, double tilt)
 {
     base::Vector2d pt_vector;
     pt_vector << pan,tilt;
     return rbsFromPT(pt_vector);
 }
 
-bool DirectedPerceptionTask::configureHook()
+bool Task::configureHook()
 {
-    if (! DirectedPerceptionTaskBase::configureHook())
+    if (! TaskBase::configureHook())
         return false;
     return true;
 }
-bool DirectedPerceptionTask::startHook()
+bool Task::startHook()
 {
-    if (! DirectedPerceptionTaskBase::startHook())
+    if (! TaskBase::startHook())
         return false;
 
     if ( _baudrate.get() != 9600) 
@@ -65,9 +65,9 @@ bool DirectedPerceptionTask::startHook()
     return mpImpl->mDriver.openSerial( _port.get(), _baudrate.get() );
 }
 
-void DirectedPerceptionTask::updateHook()
+void Task::updateHook()
 {
-    DirectedPerceptionTaskBase::updateHook();
+    TaskBase::updateHook();
 
     base::samples::RigidBodyState lrbs;
     if ( _set_orientation.readNewest(lrbs) == RTT::NewData ) {
@@ -101,18 +101,18 @@ void DirectedPerceptionTask::updateHook()
     _orientation_samples.write(lrbs_out);
     
 }
-// void DirectedPerceptionTask::errorHook()
+// void Task::errorHook()
 // {
-//     DirectedPerceptionTaskBase::errorHook();
+//     TaskBase::errorHook();
 // }
-void DirectedPerceptionTask::stopHook()
+void Task::stopHook()
 {
-    DirectedPerceptionTaskBase::stopHook();
+    TaskBase::stopHook();
     mpImpl->mDriver.setHalt();
     mpImpl->mDriver.close();
 }
-//void DirectedPerceptionTask::cleanupHook()
+//void Task::cleanupHook()
 //{
-//    DirectedPerceptionTaskBase::cleanupHook();
+//    TaskBase::cleanupHook();
 //}
 

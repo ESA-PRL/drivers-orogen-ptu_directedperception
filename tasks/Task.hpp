@@ -5,16 +5,16 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "ptu_directedperception/DirectedPerceptionTaskBase.hpp"
+#include "ptu_directedperception/TaskBase.hpp"
 
 namespace ptu_directedperception {
 
     class DriverImpl;
 
-    /*! \class DirectedPerceptionTask */
-    class DirectedPerceptionTask : public DirectedPerceptionTaskBase
+    /*! \class Task */
+    class Task : public TaskBase
     {
-	friend class DirectedPerceptionTaskBase;
+	friend class TaskBase;
     protected:
         boost::shared_ptr<DriverImpl> mpImpl;
         
@@ -29,22 +29,22 @@ namespace ptu_directedperception {
 
 
     public:
-        /** TaskContext constructor for DirectedPerceptionTask
+        /** TaskContext constructor for Task
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
          */
-        DirectedPerceptionTask(std::string const& name = "ptu_directedperception::DirectedPerceptionTask");
+        Task(std::string const& name = "ptu_directedperception::DirectedPerceptionTask");
 
-        /** TaskContext constructor for DirectedPerceptionTask 
+        /** TaskContext constructor for Task 
          * \param name Name of the task. This name needs to be unique to make it identifiable for nameservices. 
          * \param engine The RTT Execution engine to be used for this task, which serialises the execution of all commands, programs, state machines and incoming events for a task. 
          * 
          */
-        DirectedPerceptionTask(std::string const& name, RTT::ExecutionEngine* engine);
+        Task(std::string const& name, RTT::ExecutionEngine* engine);
 
-        /** Default deconstructor of DirectedPerceptionTask
+        /** Default deconstructor of Task
          */
-	~DirectedPerceptionTask();
+	~Task();
 
         /** This hook is called by Orocos when the state machine transitions
          * from PreOperational to Stopped. If it returns false, then the
