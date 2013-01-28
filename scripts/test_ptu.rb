@@ -10,11 +10,14 @@ if !ARGV[0]
     exit 1
 end
 
+ENV['BASE_LOG_LEVEL'] = 'INFO'
+ENV['BASE_LOG_FORMAT'] = 'SHORT'
+
 Orocos.initialize
 
 Orocos.run 'ptu_directedperception::DirectedPerceptionTask' => 'PTUTask' do
 
-    Orocos.log_all
+    #Orocos.log_all
 
     ptu = TaskContext.get 'PTUTask'
 
@@ -26,27 +29,36 @@ Orocos.run 'ptu_directedperception::DirectedPerceptionTask' => 'PTUTask' do
     ptu.configure
     ptu.start
 
-    for i in 0..22
+    (1..10).each do |i|
         if rot = rot_reader.read()
             ea = ptu.ptFromRBS(rot)
-            puts "#{i} pan: #{ea.data[0]} tilt: #{ea.data[1]}"
+            puts "pan: #{ea.data[0]} tilt: #{ea.data[1]}"
         end
         sleep(0.1)
     end
+    
 
     Readline.readline("Press <Enter> to test movement.") do
     end
 
     puts "Going to 45 deg, 22.5 deg"
-    rot = ptu.rbsFromPanTilt(0.7071,0.35355)
+    rot = ptu.rbsFromPanTilt(0.7071,-0.35355)
     rot_writer.write(rot)
     
-    sleep(10.0)
+    t0 = Time.now
+    while ( Time.now - t0 < 2.0 )
+        if rot = rot_reader.read()
+            ea = ptu.ptFromRBS(rot)
+            puts "pan: #{ea.data[0]} tilt: #{ea.data[1]}"
+        end
+        sleep(0.01)
+    end
 
     puts "Going back"
     rot = ptu.rbsFromPanTilt(0,0)
     rot_writer.write(rot)
 
-    sleep(5.0)
+    sleep(2.0)
+
     puts "Fini"
 end
