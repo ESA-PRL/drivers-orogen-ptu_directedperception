@@ -51,5 +51,8 @@ task_context "Task" do
    output_port("orientation_samples","base/samples/RigidBodyState").
         doc("the transformation from base to head")
 
+   output_port("pan_angle","/double")
+   output_port("tilt_angle","/double")
+
    periodic(0.01)
 end
