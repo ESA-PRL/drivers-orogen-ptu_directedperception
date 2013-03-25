@@ -102,6 +102,7 @@ void Task::updateHook()
         lrbs_out.time = base::Time::now();
         lrbs_out.sourceFrame = _base_frame_name.get();
         lrbs_out.targetFrame = _head_frame_name.get();
+        lrbs_out.position = Eigen::Vector3d::Zero();
         _orientation_samples.write(lrbs_out);
     }
     
