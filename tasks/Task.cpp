@@ -92,7 +92,7 @@ void Task::updateHook()
 
     base::Vector2d pt;
     pt << mpImpl->mDriver.getPosRad(ptu::PAN, false), 
-       mpImpl->mDriver.getPosRad(ptu::TILT, false);
+       - mpImpl->mDriver.getPosRad(ptu::TILT, false);
 
     _pan_angle.write(pt[0]);
     _tilt_angle.write(pt[1]);

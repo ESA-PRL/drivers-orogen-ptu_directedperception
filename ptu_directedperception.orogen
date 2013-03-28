@@ -4,6 +4,7 @@ using_library "ptu_directedperception"
 import_types_from "base"
 
 task_context "Task" do
+    doc "tilt + is down, tilt - is up"
    
    needs_configuration
     
