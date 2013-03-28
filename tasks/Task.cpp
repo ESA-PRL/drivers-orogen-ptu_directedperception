@@ -100,8 +100,8 @@ void Task::updateHook()
     if ( _orientation_samples.connected() ) {
         base::samples::RigidBodyState lrbs_out = rbsFromPT(pt);
         lrbs_out.time = base::Time::now();
-        lrbs_out.sourceFrame = _base_frame_name.get();
-        lrbs_out.targetFrame = _head_frame_name.get();
+        lrbs_out.sourceFrame = _head_frame.get();
+        lrbs_out.targetFrame = _base_frame.get();
         lrbs_out.position = Eigen::Vector3d::Zero();
         _orientation_samples.write(lrbs_out);
     }

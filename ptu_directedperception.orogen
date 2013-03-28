@@ -24,10 +24,10 @@ task_context "Task" do
     # between vertical axis and horizontal axis. The port orientation_samples put out
     # the rotation between the frames.
 
-    property("base_frame_name", "/std/string","ptu_base").
+    property("base_frame", "/std/string", "ptu_base").
         doc("name for the basis frame of the ptu, fixed to the platform")
 
-    property("head_frame_name", "/std/string", "ptu_head").
+    property("head_frame", "/std/string", "ptu_head").
         doc("name for the head frame of the ptu, the movable part")
    
 
