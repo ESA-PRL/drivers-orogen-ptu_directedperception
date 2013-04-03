@@ -51,18 +51,26 @@ bool Task::configureHook()
 {
     if (! TaskBase::configureHook())
         return false;
+
+    mpImpl->mDriver.openURI(_io_port.get());
+
+    mpImpl->mDriver.initialize();
+    
+    setDriver(&(mpImpl->mDriver));
+
     return true;
 }
+
 bool Task::startHook()
 {
     if (! TaskBase::startHook())
         return false;
-
-    if ( _baudrate.get() != 9600) 
-        RTT::log(RTT::Warning) << "Other Baudrates then 9600 not supported by now." 
-            << RTT::endlog();
-
-    return mpImpl->mDriver.openSerial( _port.get(), _baudrate.get() );
+        
+    if ( _pan_speed.get() > 0 )
+        mpImpl->mDriver.setSpeedRad(ptu::PAN, _pan_speed);
+        
+    if ( _tilt_speed.get() > 0 )
+        mpImpl->mDriver.setSpeedRad(ptu::TILT, _tilt_speed);
 }
 
 void Task::updateHook()
@@ -70,27 +78,24 @@ void Task::updateHook()
     TaskBase::updateHook();
 
     base::samples::RigidBodyState lrbs;
+    base::Vector2d pt;
+    bool new_pan, new_tilt;
+    new_pan = new_tilt = false;
+
     if ( _set_orientation.readNewest(lrbs) == RTT::NewData ) {
 
-        base::Vector2d pt = ptFromRBS(lrbs);
+        pt = ptFromRBS(lrbs);
+        new_pan = new_tilt = true;
 
-        if ( _pan_speed.get() > 0 ) {
-            if (!mpImpl->mDriver.setSpeedRad(ptu::PAN, _pan_speed) )
-                RTT::log(RTT::Error) << "Setting pan speed failed." << RTT::endlog();
-        }
-        if ( !mpImpl->mDriver.setPosRad(ptu::PAN, false, pt[0]) )
-            RTT::log(RTT::Error) << "Setting pan failed." << RTT::endlog();
-
-        if ( _tilt_speed.get() > 0 ) {
-            if (!mpImpl->mDriver.setSpeedRad(ptu::TILT, _tilt_speed) )
-                RTT::log(RTT::Error) << "Setting titl speed failed." << RTT::endlog();
-        }
-        if ( !mpImpl->mDriver.setPosRad(ptu::TILT, false, pt[1]) )
-            RTT::log(RTT::Error) << "Setting tilt failed." << RTT::endlog();
-
+    } else {
+     
+        new_pan = _pan_set.readNewest(pt[0]) == RTT::NewData;
+        new_tilt = _tilt_set.readNewest(pt[1]) == RTT::NewData;
     }
 
-    base::Vector2d pt;
+    if (new_pan) mpImpl->mDriver.setPosRad(ptu::PAN, false, pt[0]);
+    if (new_tilt) mpImpl->mDriver.setPosRad(ptu::TILT, false, pt[1]);
+
     pt << mpImpl->mDriver.getPosRad(ptu::PAN, false), 
        mpImpl->mDriver.getPosRad(ptu::TILT, false);
 
@@ -107,16 +112,19 @@ void Task::updateHook()
     }
     
 }
+
 // void Task::errorHook()
 // {
 //     TaskBase::errorHook();
 // }
+
 void Task::stopHook()
 {
     TaskBase::stopHook();
     mpImpl->mDriver.setHalt();
     mpImpl->mDriver.close();
 }
+
 //void Task::cleanupHook()
 //{
 //    TaskBase::cleanupHook();

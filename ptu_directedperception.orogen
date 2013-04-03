@@ -1,23 +1,27 @@
 name "ptu_directedperception"
 
 using_library "ptu_directedperception"
+using_task_library "iodrivers_base"
 import_types_from "base"
 
 task_context "Task" do
+    doc <<-EOD
+Driver component for a Directed Perception PTU. The frame convention is such that pan is 
+around the z axis and tilt is around the y axis with x axis forward. Which means that a
+positive tilt points it down and the negative tilt points it upwards. 
+
+One can use either the set_orientation port or the pan/tilt ports. The set_orientation 
+port has priority and the other input ports are not checked if data coming on the orientation 
+port.
+EOD
+
+    subclasses "iodrivers_base::Task"
    
-   needs_configuration
-    
-    property("port", "/std/string", "/dev/ttyS0").
-        doc("port the ptu is connected to")
-
-    property("baudrate", "int", 9600)
-
     property("pan_speed", "/double", 0).
         doc("desired speed of pan axis in rad/s (<=0: not set)")
 
     property("tilt_speed", "/double", 0).
         doc("desired speed of tilt axis in rad/s (<=0: not set)")
-
 
     # Transformer:
     # Base frame and head frame share the same position, which is the intersection point
@@ -46,13 +50,16 @@ task_context "Task" do
         argument("tilt","double").
         returns("/base/samples/RigidBodyState")
 
-   input_port "set_orientation", "base/samples/RigidBodyState"
+    input_port "set_orientation", "base/samples/RigidBodyState"
 
-   output_port("orientation_samples","base/samples/RigidBodyState").
+    input_port("pan_set", "/double").doc("pan angle in radian")
+    input_port("tilt_set", "/double").doc("tilt angle in radian")
+
+    output_port("orientation_samples","base/samples/RigidBodyState").
         doc("the transformation from base to head")
 
-   output_port("pan_angle","/double")
-   output_port("tilt_angle","/double")
+    output_port("pan_angle","/double")
+    output_port("tilt_angle","/double")
 
-   periodic(0.01)
+    periodic(0.01)
 end
