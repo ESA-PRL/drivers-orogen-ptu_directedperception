@@ -9,7 +9,6 @@ task_context "Task" do
 Driver component for a Directed Perception PTU. The frame convention is such that pan is 
 around the z axis and tilt is around the y axis with x axis forward. Which means that a
 positive tilt points it down and the negative tilt points it upwards. 
-
 One can use either the set_orientation port or the pan/tilt ports. The set_orientation 
 port has priority and the other input ports are not checked if data coming on the orientation 
 port.
@@ -28,10 +27,10 @@ EOD
     # between vertical axis and horizontal axis. The port orientation_samples put out
     # the rotation between the frames.
 
-    property("base_frame_name", "/std/string","ptu_base").
+    property("base_frame", "/std/string", "ptu_base").
         doc("name for the basis frame of the ptu, fixed to the platform")
 
-    property("head_frame_name", "/std/string", "ptu_head").
+    property("head_frame", "/std/string", "ptu_head").
         doc("name for the head frame of the ptu, the movable part")
    
 

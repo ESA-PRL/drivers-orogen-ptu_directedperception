@@ -97,7 +97,7 @@ void Task::updateHook()
     if (new_tilt) mpImpl->mDriver.setPosRad(ptu::TILT, false, pt[1]);
 
     pt << mpImpl->mDriver.getPosRad(ptu::PAN, false), 
-       mpImpl->mDriver.getPosRad(ptu::TILT, false);
+       - mpImpl->mDriver.getPosRad(ptu::TILT, false);
 
     _pan_angle.write(pt[0]);
     _tilt_angle.write(pt[1]);
@@ -105,8 +105,8 @@ void Task::updateHook()
     if ( _orientation_samples.connected() ) {
         base::samples::RigidBodyState lrbs_out = rbsFromPT(pt);
         lrbs_out.time = base::Time::now();
-        lrbs_out.sourceFrame = _base_frame_name.get();
-        lrbs_out.targetFrame = _head_frame_name.get();
+        lrbs_out.sourceFrame = _head_frame.get();
+        lrbs_out.targetFrame = _base_frame.get();
         lrbs_out.position = Eigen::Vector3d::Zero();
         _orientation_samples.write(lrbs_out);
     }
