@@ -72,6 +72,8 @@ bool Task::startHook()
         
     if ( _tilt_speed.get() > 0 )
         mpImpl->mDriver.setSpeedRad(ptu::TILT, _tilt_speed);
+
+    return true;
 }
 
 void Task::updateHook()
