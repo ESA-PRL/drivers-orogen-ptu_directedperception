@@ -5,23 +5,20 @@ require 'readline'
 
 include Orocos
 
-if !ARGV[0]
-    STDERR.puts "usage: test_ptu.rb PORT"
-    exit 1
-end
-
 ENV['BASE_LOG_LEVEL'] = 'INFO'
 ENV['BASE_LOG_FORMAT'] = 'SHORT'
 
 Orocos.initialize
 
-Orocos.run 'ptu_directedperception::DirectedPerceptionTask' => 'PTUTask' do
+Orocos.run 'ptu_directedperception::Task' => 'PTUTask' do
 
     #Orocos.log_all
 
     ptu = TaskContext.get 'PTUTask'
 
-    ptu.port = ARGV[0] || "/dev/ttyS1"
+    port = ARGV[0] || "/dev/ttyS1"
+    ptu.io_port = ["serial://", port,":9600"].join("")
+    puts "connecting to #{ptu.io_port}"
     
     rot_writer = ptu.set_orientation.writer
     rot_reader = ptu.orientation_samples.reader

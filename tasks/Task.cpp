@@ -49,14 +49,15 @@ Task::~Task()
 
 bool Task::configureHook()
 {
-    if (! TaskBase::configureHook())
-        return false;
 
     mpImpl->mDriver.openURI(_io_port.get());
 
     mpImpl->mDriver.initialize();
     
     setDriver(&(mpImpl->mDriver));
+    
+    if (! TaskBase::configureHook())
+        return false;
 
     return true;
 }
@@ -122,7 +123,6 @@ void Task::stopHook()
 {
     TaskBase::stopHook();
     mpImpl->mDriver.setHalt();
-    mpImpl->mDriver.close();
 }
 
 //void Task::cleanupHook()
