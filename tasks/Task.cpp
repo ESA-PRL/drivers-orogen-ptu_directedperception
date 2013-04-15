@@ -97,7 +97,8 @@ void Task::updateHook()
     }
 
     if (new_pan) mpImpl->mDriver.setPosRad(ptu::PAN, false, pt[0]);
-    if (new_tilt) mpImpl->mDriver.setPosRad(ptu::TILT, false, pt[1]);
+    // Assuming x forward, a positive tilt means down, but the ptu takes positive tilt as up.
+    if (new_tilt) mpImpl->mDriver.setPosRad(ptu::TILT, false, -pt[1]);
 
     pt << mpImpl->mDriver.getPosRad(ptu::PAN, false), 
        - mpImpl->mDriver.getPosRad(ptu::TILT, false);
