@@ -1,9 +1,10 @@
 <package>
-  <description brief="Orogen component for ptu.">
-  Orogen component for ptu.
+  <description brief="Orogen component for Directed Perception PTUs.">
+  Component for pan tilt units made by Directed Perception.
   </description>
   <author>Remus Claudiu Dumitru/r.dumitru@jacobs-university.de</author>
-  <license></license>
+  <author>Felix Rehrmann/felix.rehrmann@dfki.de</author>
+  <license>LGPL v2 or later</license>
   <url>http://</url>
   <logo>http://</logo>
   <!--
