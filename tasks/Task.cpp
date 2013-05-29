@@ -106,15 +106,20 @@ void Task::updateHook()
     _pan_angle.write(pt[0]);
     _tilt_angle.write(pt[1]);
 
-    if ( _orientation_samples.connected() ) {
-        base::samples::RigidBodyState lrbs_out = rbsFromPT(pt);
-        lrbs_out.time = base::Time::now();
-        lrbs_out.sourceFrame = _head_frame.get();
-        lrbs_out.targetFrame = _base_frame.get();
-        lrbs_out.position = Eigen::Vector3d::Zero();
-        _orientation_samples.write(lrbs_out);
+    base::samples::RigidBodyState lrbs_out = rbsFromPT(pt);
+    lrbs_out.time = base::Time::now();
+    lrbs_out.sourceFrame = _head_frame.get();
+    lrbs_out.targetFrame = _base_frame.get();
+    lrbs_out.position = Eigen::Vector3d::Zero();
+    _orientation_samples.write(lrbs_out);
+}
+
+void Task::processIO()
+{
+    if (mDriver->hasPacket())
+    {
+        throw std::runtime_error("processIO called, and the driver reports a packet: " + packet);
     }
-    
 }
 
 // void Task::errorHook()

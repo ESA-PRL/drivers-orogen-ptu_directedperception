@@ -27,6 +27,7 @@ namespace ptu_directedperception {
         
         virtual ::base::samples::RigidBodyState rbsFromPanTilt(double pan, double tilt);
 
+        void processIO();
 
     public:
         /** TaskContext constructor for Task
