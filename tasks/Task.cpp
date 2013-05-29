@@ -118,7 +118,7 @@ void Task::processIO()
 {
     if (mDriver->hasPacket())
     {
-        throw std::runtime_error("processIO called, and the driver reports a packet: " + packet);
+        throw std::runtime_error("processIO called, and the driver reports a packet");
     }
 }
 
