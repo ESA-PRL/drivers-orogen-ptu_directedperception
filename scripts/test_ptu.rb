@@ -18,6 +18,8 @@ Orocos.run 'ptu_directedperception::Task' => 'PTUTask' do
 
     port = ARGV[0] || "/dev/ttyS1"
     ptu.io_port = ["serial://", port,":9600"].join("")
+    ptu.io_read_timeout = Time.at(2.0)
+    ptu.io_write_timeout = Time.at(2.0)
     puts "connecting to #{ptu.io_port}"
     
     rot_writer = ptu.set_orientation.writer

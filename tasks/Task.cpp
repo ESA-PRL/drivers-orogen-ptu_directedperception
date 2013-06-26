@@ -52,13 +52,11 @@ bool Task::configureHook()
 
     mpImpl->mDriver.openURI(_io_port.get());
 
-    mpImpl->mDriver.initialize();
-    
     setDriver(&(mpImpl->mDriver));
     
     if (! TaskBase::configureHook())
         return false;
-
+    
     return true;
 }
 
@@ -66,6 +64,8 @@ bool Task::startHook()
 {
     if (! TaskBase::startHook())
         return false;
+    
+    mpImpl->mDriver.initialize();
         
     if ( _pan_speed.get() > 0 )
         mpImpl->mDriver.setSpeedRad(ptu::PAN, _pan_speed);
