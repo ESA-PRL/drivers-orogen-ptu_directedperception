@@ -35,8 +35,11 @@ Task::~Task()
 ::base::samples::RigidBodyState Task::rbsFromPT(::base::Vector2d const & pt_in)
 {
     base::samples::RigidBodyState rbs;
-    rbs.orientation = Eigen::AngleAxisd(pt_in[1],base::Vector3d::UnitY()) *
-        Eigen::AngleAxisd(pt_in[0],base::Vector3d::UnitZ());
+    //rbs.orientation = Eigen::AngleAxisd(pt_in[1]/4.0,base::Vector3d::UnitX()) *
+    //       Eigen::AngleAxisd(pt_in[0],base::Vector3d::UnitZ());
+
+    rbs.orientation = Eigen::Quaterniond(Eigen::AngleAxisd(pt_in[0],base::Vector3d::UnitZ()) * Eigen::AngleAxisd(pt_in[1]/4.0,base::Vector3d::UnitY()));
+
     return rbs;
 }
 
