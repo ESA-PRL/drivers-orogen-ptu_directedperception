@@ -76,6 +76,14 @@ bool Task::startHook()
     if ( _tilt_speed.get() > 0 )
         mpImpl->mDriver.setSpeedRad(ptu::TILT, _tilt_speed);
 
+    // Disabling the software limits
+    mpImpl->mDriver.write("LD ");
+    // Throw away the answer
+    mpImpl->mDriver.readAns();
+
+    // Wait for the message to be thorwn away
+    sleep(1);
+
     return true;
 }
 
@@ -125,10 +133,32 @@ void Task::processIO()
     }
 }
 
-// void Task::errorHook()
-// {
-//     TaskBase::errorHook();
-// }
+void Task::exceptionHook()
+{
+    // In case the component goes into exception mode try to reset the PTU
+    printf("ptu_directedperception: PTU error, resetting PTU\n");
+
+    // Reconfigure component
+    mpImpl->mDriver.openURI(_io_port.get());
+
+    // Use a space as delimiter (can be either space or Enter)
+    mpImpl->mDriver.write("R ");
+
+    TaskBase::exceptionHook();
+
+    // Timeout until the PTU resets itself, completely arbitrary number
+    printf("ptu_directedperception: waiting for 60 seconds\n");
+    sleep(60); 
+
+    // Recover from reset, this sequence worked in rock-display
+    recover();
+    configure();
+    cleanup();
+    configure();
+    start();
+
+    printf("ptu_directedperception: Recovered\n");
+}
 
 void Task::stopHook()
 {

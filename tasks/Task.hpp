@@ -92,7 +92,7 @@ namespace ptu_directedperception {
          *
          * Call recover() to go back in the Runtime state.
          */
-        // void errorHook();
+        //void errorHook();
 
         /** This hook is called by Orocos when the state machine transitions
          * from Running to Stopped after stop() has been called.
@@ -104,6 +104,8 @@ namespace ptu_directedperception {
          * before calling start() again.
          */
         //void cleanupHook();
+
+        void exceptionHook();
     };
 }
 
