@@ -4,7 +4,7 @@ using_library "ptu_directedperception"
 using_task_library "iodrivers_base"
 import_types_from "base"
 
-task_context "Task" do
+task_context "Task", subclasses: "iodrivers_base::Task" do
     doc <<-EOD
 Driver component for a Directed Perception PTU. The frame convention is such that pan is 
 around the z axis and tilt is around the y axis with x axis forward. Which means that a
@@ -13,8 +13,6 @@ One can use either the set_orientation port or the pan/tilt ports. The set_orien
 port has priority and the other input ports are not checked if data coming on the orientation 
 port.
 EOD
-
-    subclasses "iodrivers_base::Task"
    
     property("pan_speed", "/double", 0).
         doc("desired speed of pan axis in rad/s (<=0: not set)")
